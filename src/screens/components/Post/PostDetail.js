@@ -32,7 +32,6 @@ postDetail = ({ navigation, state, setUser, route }) => {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [fullScreen, setFullScreen] = useState(false);
 
-  const userName = `@${state.user.firstName + state.user.lastName + state.user._id.slice(0, 4)}`;
   const data = route.params;
   
   if(!data) { return null };

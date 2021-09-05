@@ -20,6 +20,9 @@ import { actionCreators } from "../../../../../store";
 import { stateHomePost } from "../../utils/functions.utils";
 
 AddComment = ({ navigation, setHomePosts, route, state }) => {
+    
+    if (!state.user) return null;
+
     const { isDarkmode, setTheme } = useTheme('');
     const [errorMessage, setErrorMessage] = useState(null);
     const [loading, setLoading] = useState(null);

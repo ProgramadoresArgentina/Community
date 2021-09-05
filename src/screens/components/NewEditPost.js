@@ -13,6 +13,7 @@ import * as FileSystem from 'expo-file-system';
 import { apiUrl } from "../../../keys";
 import { navigate, navigateGoBack } from "../../navigation/RootNavigation";
 import { AxiosService } from "../../services/axiosService";
+import Toast from 'react-native-toast-message';
 
 // Redux
 import { connect } from 'react-redux';
@@ -20,6 +21,9 @@ import { actionCreators } from "../../../store";
 import { bindActionCreators } from "redux";
 
 newEditPostComponent = ({ navigation, setHomePosts, state }) => {
+  
+  if (!state.user) return null;
+  
   const { isDarkmode, setTheme } = useTheme('');
   const [imageSelected, setImageSelected] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -49,6 +53,11 @@ newEditPostComponent = ({ navigation, setHomePosts, state }) => {
       res.data = { ...res.data, user: state.user, comments: [] };
       state.homePosts.unshift(res.data);
       setHomePosts(state.homePosts);
+      Toast.show({
+        type: 'success',
+        text1: 'Publicar',
+        text2: 'Publicada con éxito!'
+      });
       navigateGoBack();
     }).catch((error) => {
       console.log(error);

@@ -21,6 +21,7 @@ auth = ({ navigation, state, setUser }) => {
   const [errorMessage, setErrorMessage] = useState(null);
 
   React.useEffect(() => {
+    setUser(null);
     if (user !== state.user) {
       setLocalUser(state.user);
     }

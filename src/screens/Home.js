@@ -21,7 +21,6 @@ import { bindActionCreators } from "redux";
 
 Home = ({ navigation, setHomePosts, state }) => {
   const { isDarkmode, setTheme } = useTheme();
-  const [ posts, setPosts ] = useState(null);
 
   React.useEffect(() => {
     getPosts();
@@ -29,7 +28,6 @@ Home = ({ navigation, setHomePosts, state }) => {
 
   const getPosts = () => {
     AxiosService().get('/post').then(({data}) => {
-      setPosts(data);
       setHomePosts(data);
     }).catch((error) => {
       console.log(error);
@@ -79,7 +77,7 @@ Home = ({ navigation, setHomePosts, state }) => {
       <View style={{ marginHorizontal: 10, height: '80%' }}>
         <ListVertical
           loading={false}
-          data={posts}
+          data={state.homePosts}
           onRefresh={() => getPosts()}
           component={Post}
         ></ListVertical>

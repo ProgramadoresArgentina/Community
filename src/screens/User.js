@@ -21,19 +21,18 @@ import { Tab, TabBar, Button } from "@ui-kitten/components";
 import Post from "./components/Post/Post";
 import { actionCreators } from "../../store";
 import { bindActionCreators } from "redux";
-import { navigate } from "../navigation/RootNavigation";
+import { navigate, navigateReset } from "../navigation/RootNavigation";
 
 userComponent = ({ navigation, state, setUser }) => {
   const { isDarkmode, setTheme } = useTheme();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
 
-  const userName = `@${state.user.firstName + state.user.lastName + state.user._id.slice(0, 4)}`;
+  if (!state.user) return null;
 
 
   const logout = async () => {
     await AsyncStorage.removeItem('@auth');
-    setUser(null);
-    navigate('Home');
+    navigateReset('Auth');
   }
 
   return (

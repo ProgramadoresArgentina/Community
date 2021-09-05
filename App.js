@@ -11,6 +11,7 @@ import { EvaIconsPack } from '@ui-kitten/eva-icons';
 // Redux
 import { Provider } from 'react-redux';
 import { store } from "./store";
+import Toast from "react-native-toast-message";
 
 export default function App() {
 
@@ -28,6 +29,7 @@ export default function App() {
         <ThemeProvider style={{position: "relative"}}>
           <ApplicationProvider {...eva} theme={eva.light}>
             <AppNavigator />
+            <Toast ref={(ref) => Toast.setRef(ref)} />
           </ApplicationProvider>
         </ThemeProvider>
       </Provider>

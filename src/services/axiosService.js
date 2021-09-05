@@ -25,6 +25,9 @@ export const AxiosService = () => {
         },
         post: (uri, body) => {
             return API.post(apiUrl + uri, JSON.stringify(body));
-        }
+        },
+        delete: (uri) => {
+            return API.delete(apiUrl + uri);
+        },
     }
 }

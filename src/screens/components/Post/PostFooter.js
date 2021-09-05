@@ -7,13 +7,41 @@ import { Ionicons } from "@expo/vector-icons";
 // Redux
 import { connect } from 'react-redux';
 import { navigate } from "../../../navigation/RootNavigation";
+import { AxiosService } from "../../../services/axiosService";
+import Toast from "react-native-toast-message";
+import { bindActionCreators } from "redux";
+import { actionCreators } from "../../../../store";
 
-PostFooter = ({ data, state }) => {
+PostFooter = ({ data, state, setHomePosts }) => {
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
 
   if (!data) { return null };
+  if (!state.user) return null;
   const post = state.homePosts && state.homePosts.find(p => p._id === data._id);
   const comments = post ? post.comments : [];
+
+  const onMenuSelected = ({row}) => {
+    if (row === 0) { // Delete
+      deletePost();
+    }
+    setShowOptionsMenu(false);
+  }
+
+  const deletePost = () => {
+    AxiosService().delete(`/post/${data._id}`).then(res => {
+      Toast.show({
+        type: 'success',
+        text1: 'Publicar',
+        text2: 'Eliminada con éxito!'
+      });
+
+      // Delete from datalist
+      state.homePosts = state.homePosts.filter(e => e._id !== data._id);
+      setHomePosts(state.homePosts);
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
 
   return (
     <View style={{ width: '100%', justifyContent: 'space-between', flexDirection: 'row' }}>
@@ -58,29 +86,37 @@ PostFooter = ({ data, state }) => {
           )}
           visible={showOptionsMenu}
           selectedIndex={1}
-          // onSelect={onItemSelect}
+          onSelect={(item) => onMenuSelected(item)}
           onBackdropPress={() => setShowOptionsMenu(false)}
         >
-          {
+          {/* {
             data.user._id === state.user._id &&
             <MenuItem title='Editar' />
-          }
+          } */}
           {
-            data.user._id === state.user._id &&
+            (data.user._id === state.user._id)
+            || (state.user.rol === 'Admin') ?
             <MenuItem title='Eliminar' />
+            : null
           }
-          {
+          {/* {
             data.user._id !== state.user._id &&
             <MenuItem title='Denunciar' />
-          }
+          } */}
         </OverflowMenu>
       </View>
     </View>
   );
 }
 
+function mapDispatchToProps(dispatch) {
+  return {
+    setHomePosts: bindActionCreators(actionCreators.setHomePosts, dispatch),
+  }
+}
+
 
 function mapStateToProps(state) {
   return { state }
 }
-export default connect(mapStateToProps)(PostFooter);
+export default connect(mapStateToProps, mapDispatchToProps)(PostFooter);
