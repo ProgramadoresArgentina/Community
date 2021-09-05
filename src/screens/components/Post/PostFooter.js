@@ -20,6 +20,11 @@ PostFooter = ({ data, state, setHomePosts }) => {
   const post = state.homePosts && state.homePosts.find(p => p._id === data._id);
   const comments = post ? post.comments : [];
 
+  const userReaction = () => {
+    const response = post ? post.reactions.find(reaction => reaction.user === state.user._id) ? true : false : false;
+    return response;
+  };
+
   const onMenuSelected = ({row}) => {
     if (row === 0) { // Delete
       deletePost();
@@ -43,14 +48,37 @@ PostFooter = ({ data, state, setHomePosts }) => {
     });
   }
 
+  const addReaction = () => {
+    const body = {
+        post_id: data._id
+    }
+    AxiosService().post(`/reaction`, body).then(({data}) => {
+
+      const postIndex = state.homePosts.findIndex(e => e._id !== data._id);
+      const postCurrentReactions = state.homePosts[postIndex].reactions;
+      if (data.like) { // Add reaction
+        const reactionData = {...data.reactionData, user:  state.user._id};
+        state.homePosts[postIndex].reactions = [...postCurrentReactions, reactionData];
+      } else { // Remove reaction
+        state.homePosts[postIndex].reactions = postCurrentReactions.filter(reaction => reaction.user !== state.user._id);
+      }
+
+      setHomePosts(state.homePosts);
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
   return (
     <View style={{ width: '100%', justifyContent: 'space-between', flexDirection: 'row' }}>
       <View style={{ flexDirection: 'row', alignItems: 'center'}}>
-        <TouchableOpacity style={{ alignItems: 'center', marginRight: 20 }}>
+        <TouchableOpacity
+          onPress={() => addReaction()}
+          style={{ alignItems: 'center', marginRight: 20 }}>
           <Ionicons
-            name="ios-heart"
+            name={userReaction() ? "ios-heart" : "ios-heart-outline" }
             size={25}
-            color={themeColor.danger}
+            color={userReaction() ? themeColor.danger : '#000000' }
           />
         </TouchableOpacity>
         <TouchableOpacity style={{ alignItems: 'center' }}>
@@ -64,46 +92,51 @@ PostFooter = ({ data, state, setHomePosts }) => {
         onPress={() => navigate('Comments', data)}>{comments.length} com.</Text>
       </View>
       <View style={{ flexDirection: 'row' }}>
-        <TouchableOpacity style={{ alignItems: 'center', marginRight: 20 }}>
+        {/* <TouchableOpacity style={{ alignItems: 'center', marginRight: 20 }}>
           <Ionicons
             name="ios-bookmark-outline"
             size={25}
             color={themeColor.black}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
-        <OverflowMenu
-          backdropStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
-          anchor={() => (
-            <TouchableOpacity
-              onPress={() => setShowOptionsMenu(true)}>
-              <Ionicons
-                name="ios-ellipsis-vertical"
-                size={25}
-                color={themeColor.black}
-              />
-            </TouchableOpacity>
-          )}
-          visible={showOptionsMenu}
-          selectedIndex={1}
-          onSelect={(item) => onMenuSelected(item)}
-          onBackdropPress={() => setShowOptionsMenu(false)}
-        >
-          {/* {
-            data.user._id === state.user._id &&
-            <MenuItem title='Editar' />
-          } */}
-          {
-            (data.user._id === state.user._id)
-            || (state.user.rol === 'Admin') ?
-            <MenuItem title='Eliminar' />
-            : null
-          }
-          {/* {
-            data.user._id !== state.user._id &&
-            <MenuItem title='Denunciar' />
-          } */}
-        </OverflowMenu>
+        {
+        (data.user._id === state.user._id)
+        || (state.user.rol === 'Admin') ?
+          <OverflowMenu
+            backdropStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+            anchor={() => (
+              <TouchableOpacity
+                onPress={() => setShowOptionsMenu(true)}>
+                <Ionicons
+                  name="ios-ellipsis-vertical"
+                  size={25}
+                  color={themeColor.black}
+                />
+              </TouchableOpacity>
+            )}
+            visible={showOptionsMenu}
+            selectedIndex={1}
+            onSelect={(item) => onMenuSelected(item)}
+            onBackdropPress={() => setShowOptionsMenu(false)}
+          >
+            {/* {
+              data.user._id === state.user._id &&
+              <MenuItem title='Editar' />
+            } */}
+            {
+              (data.user._id === state.user._id)
+              || (state.user.rol === 'Admin') ?
+              <MenuItem title='Eliminar' />
+              : null
+            }
+            {/* {
+              data.user._id !== state.user._id &&
+              <MenuItem title='Denunciar' />
+            } */}
+          </OverflowMenu>
+          : null
+        }
       </View>
     </View>
   );

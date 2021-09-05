@@ -74,7 +74,7 @@ postComponent = ({ data, state }) => {
                   color: 'black', marginRight: 10, paddingVertical: 3,
                   backgroundColor: 'white', paddingHorizontal: 10, borderRadius: 10
                 }}>
-                15
+                {data.reactions.length}
               </Text>
               <Text
                 size="sm"
