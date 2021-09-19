@@ -12,7 +12,7 @@ import Toast from "react-native-toast-message";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../../../../store";
 
-PostFooter = ({ data, state, setHomePosts }) => {
+PostFooter = ({ data, state, setHomePosts, setPinnedPosts }) => {
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
 
   if (!data) { return null };
@@ -28,6 +28,8 @@ PostFooter = ({ data, state, setHomePosts }) => {
   const onMenuSelected = ({row}) => {
     if (row === 0) { // Delete
       deletePost();
+    } else if(row === 1) { // Pinned
+      pinPost();
     }
     setShowOptionsMenu(false);
   }
@@ -43,6 +45,29 @@ PostFooter = ({ data, state, setHomePosts }) => {
       // Delete from datalist
       state.homePosts = state.homePosts.filter(e => e._id !== data._id);
       setHomePosts(state.homePosts);
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
+  const pinPost = () => {
+    const postIndex = state.pinnedPosts.findIndex(e => e._id === data._id); // Already Exist?
+    const body = {
+      pin: postIndex ? false : true
+    }
+    AxiosService().post(`/post/pinned/${data._id}`, body).then(({data}) => {
+      Toast.show({
+        type: 'success',
+        text1: 'Pin',
+        text2: postIndex !== -1 ? 'Pin eliminado' : 'Pin agregado con éxito!'
+      });
+
+      if (postIndex !== -1) { // Already Exist
+        state.pinnedPosts = state.pinnedPosts.filter(e => e._id !== data._id); // Delete
+      } else {
+        state.pinnedPosts = [...state.pinnedPosts, data];
+      }
+      setPinnedPosts(state.pinnedPosts);
     }).catch((error) => {
       console.log(error);
     });
@@ -126,8 +151,11 @@ PostFooter = ({ data, state, setHomePosts }) => {
             } */}
             {
               (data.user._id === state.user._id)
-              || (state.user.rol === 'Admin') ?
-              <MenuItem title='Eliminar' />
+              || (state.user.role.roleName === 'Admin') ?
+              <>
+                <MenuItem title='Eliminar' />
+                <MenuItem title='Pin' />
+              </>
               : null
             }
             {/* {
@@ -145,6 +173,7 @@ PostFooter = ({ data, state, setHomePosts }) => {
 function mapDispatchToProps(dispatch) {
   return {
     setHomePosts: bindActionCreators(actionCreators.setHomePosts, dispatch),
+    setPinnedPosts: bindActionCreators(actionCreators.setPinnedPosts, dispatch),
   }
 }
 

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Linking, ScrollView, TouchableOpacity } from "react-native";
+import React from "react";
+import { View, TouchableOpacity } from "react-native";
 import {
   Layout,
   TopNav,
@@ -10,6 +10,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import Post from "./components/Post/Post";
 import ListVertical from "./components/ListVertical";
+import CarouselCards from "./components/PinnedCarousel/CarouselCards";
 import { navigate } from "../navigation/RootNavigation";
 import { AxiosService } from "../services/axiosService";
 
@@ -74,13 +75,15 @@ Home = ({ navigation, setHomePosts, state }) => {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={{ marginHorizontal: 10, height: '80%' }}>
-        <ListVertical
-          loading={false}
-          data={state.homePosts}
-          onRefresh={() => getPosts()}
-          component={Post}
-        ></ListVertical>
+      <View style={{ height: '80%' }}>
+        <CarouselCards></CarouselCards>
+        <View style={{ marginHorizontal: 20 }}>
+          <ListVertical
+            loading={false}
+            data={state.homePosts}
+            onRefresh={() => getPosts()}
+          ></ListVertical>
+        </View>
       </View>
     </Layout>
   );

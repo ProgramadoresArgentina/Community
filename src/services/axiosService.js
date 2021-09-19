@@ -1,12 +1,14 @@
 import axios from "axios";
 import { get } from "react-native/Libraries/Utilities/PixelRatio";
+import { bindActionCreators } from "redux";
 import { apiUrl } from "../../keys";
-import { store } from "../../store";
+import { actionCreators, store } from "../../store";
+import { navigateReset } from "../navigation/RootNavigation";
 
 
 export const AxiosService = () => {
     const API = axios.create({
-        timeout: 2000,
+        // timeout: 10000,
         headers: {
             'Authorization': 'Bearer ' + store.getState().user.token,
             'Content-Type': 'application/json'
@@ -16,6 +18,9 @@ export const AxiosService = () => {
     API.interceptors.response.use(function ({data}) {
         return data;
     }, function (error) {
+        if (error.response.status === 401) { // Unauthorized
+            navigateReset('Login');
+        }
         return Promise.reject(error);
     });
 

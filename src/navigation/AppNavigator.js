@@ -12,8 +12,10 @@ import { bindActionCreators } from "redux";
 import Home from '../screens/Home';
 import SecondScreen from '../screens/SecondScreen';
 import BottomNav from './BottomNav';
-import AuthComponent from '../screens/Auth';
-import User from '../screens/User';
+import LoginComponent from '../screens/Auth/Login';
+import RegisterComponent from '../screens/Auth/Register';
+import ValidateOtpComponent from '../screens/Auth/ValidateOTP';
+import User from '../screens/User/User';
 import { apiUrl } from '../../keys';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -22,6 +24,7 @@ import NewEditPost from '../screens/components/NewEditPost';
 import AddComment from '../screens/components/Post/Comments/AddComment';
 import PostDetail from '../screens/components/Post/PostDetail';
 import Comments from '../screens/components/Post/Comments/Comments';
+import UsersProfile from '../screens/UsersProfile';
 
 const MainStack = createStackNavigator();
 
@@ -33,7 +36,9 @@ const Main = () => {
 			}}
 		>
 			<MainStack.Screen name="Loading" component={LoadingPage} />
-			<MainStack.Screen name="Auth" component={AuthComponent} />
+			<MainStack.Screen name="Login" component={LoginComponent} />
+			<MainStack.Screen name="Register" component={RegisterComponent} />
+			<MainStack.Screen name="ValidateOtp" component={ValidateOtpComponent} />
 			<MainStack.Screen name="Home" component={Home} />
 			<MainStack.Screen name="SecondScreen" component={SecondScreen} />
 			<MainStack.Screen name="User" component={User} />
@@ -41,6 +46,7 @@ const Main = () => {
 			<MainStack.Screen name="PostDetail" component={PostDetail} />
 			<MainStack.Screen name="Comments" component={Comments} />
 			<MainStack.Screen name="AddComment" component={AddComment} />
+			<MainStack.Screen name="UsersProfile" component={UsersProfile} />
 		</MainStack.Navigator>
 	);
 };
@@ -65,14 +71,20 @@ appNavigator = ({state, setUser}) => {
 		if (!state.user) {
 			isLoginIn().then(res => {
 				setUser(res.data.data);
-				redirectTo('Home');
+				if (res.data.data.isConfirmed) {
+					redirectTo('Home');
+				} else {
+					redirectTo('ValidateOtp');
+				}
 			}).catch(err => {
 				console.log(err);
-				redirectTo('Auth')
+				redirectTo('Login')
 			});
 		} else {
-			redirectTo('Home');
+			console.log(state.user);
+			redirectTo('Home')
 		}
+		console.log(state.user);
 		return () => (isMountedRef.current = false);
 
 	}, []);

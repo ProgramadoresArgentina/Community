@@ -46,7 +46,7 @@ postComponent = ({ data, state }) => {
           <Avatar size='small' source={require('../../../../assets/images/avatar.jpg')} />
           <View style={{ marginLeft: 10 }}>
             <Text size="md" fontWeight="regular">{data.user.userName}</Text>
-            <Text size="sm" fontWeight="light">{data.user.rol}</Text>
+            <Text size="sm" fontWeight="light">{data.user.role.roleName}</Text>
           </View>
         </View>
         <Text style={{ color: themeColor.gray100, fontSize: 10 }}>{formatDate(data.createdAt)}</Text>

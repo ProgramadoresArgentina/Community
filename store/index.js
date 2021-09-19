@@ -5,6 +5,7 @@ import { createStore } from 'redux';
 export const types = {
 	SETUSER: 'SETUSER',
 	SETHOMEPOST: 'SETHOMEPOST',
+	SETPINNEDPOST: 'SETPINNEDPOST'
 }
 
 // Helper functions to dispatch actions, optionally with payloads
@@ -14,13 +15,17 @@ export const actionCreators = {
 	},
 	setHomePosts: (posts) => {
 		return { type: types.SETHOMEPOST, payload: posts }
+	},
+	setPinnedPosts: (posts) => {
+		return { type: types.SETPINNEDPOST, payload: posts }
 	}
 }
 
 // Initial state of the store
 const initialState = {
 	user: null,
-	homePosts: null
+	homePosts: null,
+	pinnedPosts: [],
 }
 
 export const reducer = (state = initialState, action) => {
@@ -32,6 +37,9 @@ export const reducer = (state = initialState, action) => {
 		}
 		case types.SETHOMEPOST: {
 			return { ...state, homePosts: payload }
+		}
+		case types.SETPINNEDPOST: {
+			return { ...state, pinnedPosts: payload }
 		}
 		default: {return state}
 	}

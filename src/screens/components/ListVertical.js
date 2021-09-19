@@ -7,7 +7,7 @@ export default ({ loading, data, onRefresh }) => {
 
     renderItem = (item, index) => {
         return (
-            <Post data={item}></Post>
+            <Post data={item} key={index}></Post>
         )
     }
 
@@ -20,6 +20,7 @@ export default ({ loading, data, onRefresh }) => {
                     tintColor={themeColor.gray200}
                 />
             }
+            keyExtractor={(item, index) => index.toString()}
             data={data}
             style={{ width: '100%', height: '100%' }}
             horizontal={false}

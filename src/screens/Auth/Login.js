@@ -5,16 +5,17 @@ import Svg, { Path } from 'react-native-svg';
 
 // Redux
 import { bindActionCreators } from "redux";
-import { actionCreators } from "../../store";
+import { actionCreators } from "../../../store";
 import { connect } from 'react-redux';
 
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
-import { apiUrl } from "../../keys";
+import { apiUrl } from "../../../keys";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { navigate } from "../../navigation/RootNavigation";
 
 
-auth = ({ navigation, state, setUser }) => {
+login = ({ navigation, state, setUser }) => {
   const [user, setLocalUser] = useState(false);
   const [mail, setMail] = useState('');
   const [password, setPassword] = useState('');
@@ -31,7 +32,7 @@ auth = ({ navigation, state, setUser }) => {
     navigation.reset({ index: 0, routes: [{ name: name }], });
   }
 
-  loginIn = () => {
+  const loginIn = () => {
     const params =  {
       email: mail,
       password: password
@@ -41,7 +42,11 @@ auth = ({ navigation, state, setUser }) => {
       await AsyncStorage.setItem('@auth', JSON.stringify(params));
       setLocalUser(data.data);
       setUser(data.data);
-      redirectTo('Home');
+      if (data.data.isConfirmed) {
+        redirectTo('Home');
+      } else {
+					redirectTo('ValidateOtp');
+      }
     }).catch(err => {
       let message = '';
       if (err.response.data.data) {
@@ -121,7 +126,8 @@ auth = ({ navigation, state, setUser }) => {
                   color: 'rgba(150, 150, 150, .3)'
                 }}>ó tambien puedes</Text>
           </View>
-          <Button text="Registrarme" outline/>
+          <Button text="Registrarme" outline
+          onPress={() => navigate('Register')}/>
         </View>
       </View>
     </SafeAreaView>
@@ -176,4 +182,4 @@ function mapDispatchToProps(dispatch) {
 function mapStateToProps(state) {
   return { state }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(auth)
+export default connect(mapStateToProps, mapDispatchToProps)(login)
