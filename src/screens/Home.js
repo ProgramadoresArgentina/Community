@@ -22,7 +22,7 @@ import { bindActionCreators } from "redux";
 
 Home = ({ navigation, setHomePosts, state }) => {
   const { isDarkmode, setTheme } = useTheme();
-  let [page, setPage] = useState(1);
+  let [page, setPage] = useState(0);
 
   React.useEffect(() => {
     getPosts(1);

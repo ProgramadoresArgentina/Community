@@ -52,17 +52,18 @@ PostFooter = ({ data, state, setHomePosts, setPinnedPosts }) => {
   }
 
   const pinPost = () => {
+    const postPinIndex = state.pinnedPosts.findIndex(e => e._id === data._id); // Already Exist?
     const body = {
-      pin: postIndex !== -1 ? false : true
+      pin: postPinIndex !== -1 ? false : true
     }
     AxiosService().post(`/post/pinned/${data._id}`, body).then(({data}) => {
       Toast.show({
         type: 'success',
         text1: 'Pin',
-        text2: postIndex !== -1 ? 'Pin eliminado' : 'Pin agregado con éxito!'
+        text2: postPinIndex !== -1 ? 'Pin eliminado' : 'Pin agregado con éxito!'
       });
 
-      if (postIndex !== -1) { // Already Exist
+      if (postPinIndex !== -1) { // Already Exist
         state.pinnedPosts = state.pinnedPosts.filter(e => e._id !== data._id); // Delete
       } else {
         state.pinnedPosts = [...state.pinnedPosts, data];
