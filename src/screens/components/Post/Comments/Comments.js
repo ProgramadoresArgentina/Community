@@ -99,7 +99,7 @@ Comments = ({ navigation, setHomePosts, route, state }) => {
             <Spinner></Spinner>
           </View>
           :
-          data.comments && data.comments.length ?
+          comments && comments.length ?
             <SafeAreaView>
               <FlatList
                 refreshControl={

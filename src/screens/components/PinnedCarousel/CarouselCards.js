@@ -44,7 +44,7 @@ const CarouselCards = ({ setPinnedPosts, state }) => {
 
     if (!state.pinnedPosts || (state.pinnedPosts.length === 0)) return null;
     return (
-        <View style={{ marginBottom: 40 }}>
+        <View style={{ marginBottom: 0 }}>
             <Carousel
                 layout="tinder"
                 layoutCardOffset={9}

@@ -61,6 +61,7 @@ appNavigator = ({state, setUser}) => {
 	const isLoginIn = async () => {
         const localStorage = await AsyncStorage.getItem('@auth');
 		if (!localStorage) { return new Promise((_, reject) => reject(false)); };
+		console.log(JSON.parse(localStorage));
 		params = JSON.parse(localStorage);
 		return axios.post(`${apiUrl}/auth/login`, params);
 	}
@@ -70,6 +71,7 @@ appNavigator = ({state, setUser}) => {
 		isMountedRef.current = true;
 		if (!state.user) {
 			isLoginIn().then(res => {
+				console.log(res.data);
 				setUser(res.data.data);
 				if (res.data.data.isConfirmed) {
 					redirectTo('Home');
@@ -77,7 +79,11 @@ appNavigator = ({state, setUser}) => {
 					redirectTo('ValidateOtp');
 				}
 			}).catch(err => {
-				console.log(err);
+				if (err.response) {
+				  console.log(err.response.data);
+				  console.log(err.response.status);
+				  console.log(err.response.headers);
+				}
 				redirectTo('Login')
 			});
 		} else {

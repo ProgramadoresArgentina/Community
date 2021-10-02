@@ -24,7 +24,7 @@ export const actionCreators = {
 // Initial state of the store
 const initialState = {
 	user: null,
-	homePosts: null,
+	homePosts: [],
 	pinnedPosts: [],
 }
 

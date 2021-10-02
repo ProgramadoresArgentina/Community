@@ -18,8 +18,10 @@ export const AxiosService = () => {
     API.interceptors.response.use(function ({data}) {
         return data;
     }, function (error) {
-        if (error.response.status === 401) { // Unauthorized
-            navigateReset('Login');
+        if (error.response) { // Unauthorized
+            if (error.response.status === 401) { // Unauthorized
+                navigateReset('Login');
+            }
         }
         return Promise.reject(error);
     });

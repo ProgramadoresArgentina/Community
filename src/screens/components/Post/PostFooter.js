@@ -18,6 +18,7 @@ PostFooter = ({ data, state, setHomePosts, setPinnedPosts }) => {
   if (!data) { return null };
   if (!state.user) return null;
   const post = state.homePosts && state.homePosts.find(p => p._id === data._id);
+  const postIndex = state.homePosts && state.homePosts.findIndex(p => p._id === data._id);
   const comments = post ? post.comments : [];
 
   const userReaction = () => {
@@ -51,9 +52,8 @@ PostFooter = ({ data, state, setHomePosts, setPinnedPosts }) => {
   }
 
   const pinPost = () => {
-    const postIndex = state.pinnedPosts.findIndex(e => e._id === data._id); // Already Exist?
     const body = {
-      pin: postIndex ? false : true
+      pin: postIndex !== -1 ? false : true
     }
     AxiosService().post(`/post/pinned/${data._id}`, body).then(({data}) => {
       Toast.show({
@@ -78,8 +78,6 @@ PostFooter = ({ data, state, setHomePosts, setPinnedPosts }) => {
         post_id: data._id
     }
     AxiosService().post(`/reaction`, body).then(({data}) => {
-
-      const postIndex = state.homePosts.findIndex(e => e._id !== data._id);
       const postCurrentReactions = state.homePosts[postIndex].reactions;
       if (data.like) { // Add reaction
         const reactionData = {...data.reactionData, user:  state.user._id};

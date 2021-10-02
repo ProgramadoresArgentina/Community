@@ -89,13 +89,13 @@ postComponent = ({ data, state }) => {
             </View>
           </TouchableOpacity>
         }
-        <View style={[styles.body, {marginTop: data.photo ? -12 : 5}]}>
+        <TouchableOpacity style={[styles.body, {marginTop: data.photo ? -12 : 5}]}
+        onPress={() => navigate('PostDetail', data)}>
           <View>
             {
               description !== '' &&
               <View>
-                <TouchableOpacity
-                  onPress={() => navigate('PostDetail', data)}>
+                <TouchableOpacity>
                   <Autolink
                     component={Text}
                     renderText={(text) => <Text size="sm">{text}</Text>}
@@ -116,7 +116,7 @@ postComponent = ({ data, state }) => {
             }
             <PostFooter data={data}></PostFooter>
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
       <ImageView
           images={[{uri: data.photo.replace(/&#x2F;/g, '/')}]}

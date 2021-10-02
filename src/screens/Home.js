@@ -1,5 +1,5 @@
-import React from "react";
-import { View, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import { View, TouchableOpacity, SafeAreaView, ScrollView, RefreshControl } from "react-native";
 import {
   Layout,
   TopNav,
@@ -22,17 +22,27 @@ import { bindActionCreators } from "redux";
 
 Home = ({ navigation, setHomePosts, state }) => {
   const { isDarkmode, setTheme } = useTheme();
+  let [page, setPage] = useState(1);
 
   React.useEffect(() => {
-    getPosts();
+    getPosts(1);
   }, []);
 
-  const getPosts = () => {
-    AxiosService().get('/post').then(({data}) => {
-      setHomePosts(data);
-    }).catch((error) => {
-      console.log(error);
-    });
+  const getPosts = (p) => {
+    if (page !== p) {
+      AxiosService().get('/post/'+p).then(({data}) => {
+        if (p === 1) {
+          setHomePosts(data);
+        } else {
+          if (data.length > 0) {
+            setHomePosts(state.homePosts.concat(data));
+          }
+        }
+        setPage(p);
+      }).catch((error) => {
+        console.log(error);
+      });
+    }
   }
 
   return (
@@ -75,16 +85,40 @@ Home = ({ navigation, setHomePosts, state }) => {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={{ height: '80%' }}>
-        <CarouselCards></CarouselCards>
-        <View style={{ marginHorizontal: 20 }}>
-          <ListVertical
-            loading={false}
-            data={state.homePosts}
-            onRefresh={() => getPosts()}
-          ></ListVertical>
-        </View>
-      </View>
+      <SafeAreaView style={{flex: 1}}>
+        <ScrollView
+          refreshControl={
+              <RefreshControl
+                  refreshing={false}
+                  onRefresh={() => getPosts(1)}
+                  tintColor={themeColor.gray200}
+              />
+          }
+          style={{ height: '80%', marginBottom: 40}}
+          // onEndReachedThreshold={10}
+          // onEndReached={onChangePage()}
+          onEndReached={e => console.log('ENTRE')}
+          onMomentumScrollEnd={(e) => {
+            const scrollPosition = e.nativeEvent.contentOffset.y;
+            const scrollViewHeight = e.nativeEvent.layoutMeasurement.height;
+            const contentHeight = e.nativeEvent.contentSize.height;
+            const isScrolledToBottom = scrollViewHeight + scrollPosition;
+
+            if (isScrolledToBottom >= (contentHeight-50)) {
+              getPosts(page+1)
+            }
+          }}
+        >
+          <CarouselCards></CarouselCards>
+          <View style={{ marginHorizontal: 20 }}>
+            <ListVertical
+              loading={false}
+              data={state.homePosts}
+              // onRefresh={() => getPosts()}
+            ></ListVertical>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
     </Layout>
   );
 }
