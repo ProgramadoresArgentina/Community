@@ -25,7 +25,7 @@ const CarouselCards = ({ setPinnedPosts, state }) => {
     }, []);
 
     const getPinnedList = () => {
-        AxiosService().get('/post/pinned').then(({ data }) => {
+        AxiosService().get('/pin').then(({ data }) => {
             setPinnedPosts(data);
         }).catch((error) => {
             console.log(error);

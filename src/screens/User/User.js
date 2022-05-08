@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     paddingHorizontal: 30,
-    marginTop: 20
+    marginTop: 50
   },
   profileImage: {
     width: '100%',

@@ -21,11 +21,11 @@ export default function ({navigationRef}) {
                         color={currentRoute.name === 'Home' ? themeColor.black : themeColor.gray}
                     />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigate('Trabajo')}>
+                <TouchableOpacity onPress={() => navigate('Events')}>
                     <Ionicons
                         name="ios-calendar"
                         size={20}
-                        color={currentRoute.name === 'Trabajo' ? themeColor.black : themeColor.gray}
+                        color={currentRoute.name === 'Events' ? themeColor.black : themeColor.gray}
                     />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => navigate('Trabajo')}>
@@ -52,7 +52,8 @@ const styles = StyleSheet.create({
         position: "absolute",
         bottom: 0,
         borderRadius: 10,
-        paddingVertical: 20,
+        paddingBottom: 20,
+        height: 80,
         // borderWidth: 1,
         borderColor: 'rgba(200,200,200, .4)',
         borderTopWidth: 1,

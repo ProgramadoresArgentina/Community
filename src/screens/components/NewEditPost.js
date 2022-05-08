@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, TouchableOpacity, Keyboard, Image } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Keyboard, Image, Dimensions } from "react-native";
 import {
   Layout,
   TopNav,
@@ -14,6 +14,7 @@ import { apiUrl } from "../../../keys";
 import { navigate, navigateGoBack } from "../../navigation/RootNavigation";
 import { AxiosService } from "../../services/axiosService";
 import Toast from 'react-native-toast-message';
+const {height} = Dimensions.get('window');
 
 // Redux
 import { connect } from 'react-redux';
@@ -50,7 +51,7 @@ newEditPostComponent = ({ navigation, setHomePosts, state }) => {
     AxiosService().post('/post', body).then(res => {
       setTextareaValue('');
       setImageSelected(null);
-      res.data = { ...res.data, user: state.user, comments: [] };
+      res.data = { ...res.data, user: state.user, comments: [], reactions: [] };
       state.homePosts.unshift(res.data);
       setHomePosts(state.homePosts);
       Toast.show({
@@ -80,7 +81,7 @@ newEditPostComponent = ({ navigation, setHomePosts, state }) => {
         leftAction={() => navigation.goBack()}
       />
 
-      <View style={styles.container}>
+      <View style={[styles.container, {height}]}>
         <View style={{ flexDirection: 'row' }}>
           {imageSelected &&
             <TouchableOpacity onPress={() => pickImage()}>
@@ -100,11 +101,11 @@ newEditPostComponent = ({ navigation, setHomePosts, state }) => {
           />
         </View>
 
-        <View style={{ width: '100%', alignItems: 'flex-start', marginBottom: 2, marginLeft: -15, }}>
+        <View style={{ width: '100%', alignItems: 'flex-start', marginBottom: 2, marginLeft: -15, marginTop: 20 }}>
           {
             !imageSelected &&
             <Button appearance='outline' size="small" status="basic" onPress={() => pickImage()}>
-              {imageSelected ? 'Cambiar' : 'Imagen'}
+              {imageSelected ? 'Cambiar' : 'Adjuntar Imagen'}
             </Button>
           }
         </View>

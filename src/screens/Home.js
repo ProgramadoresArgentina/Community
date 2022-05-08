@@ -95,9 +95,6 @@ Home = ({ navigation, setHomePosts, state }) => {
               />
           }
           style={{ height: '80%', marginBottom: 40}}
-          // onEndReachedThreshold={10}
-          // onEndReached={onChangePage()}
-          onEndReached={e => console.log('ENTRE')}
           onMomentumScrollEnd={(e) => {
             const scrollPosition = e.nativeEvent.contentOffset.y;
             const scrollViewHeight = e.nativeEvent.layoutMeasurement.height;
@@ -114,7 +111,7 @@ Home = ({ navigation, setHomePosts, state }) => {
             <ListVertical
               loading={false}
               data={state.homePosts}
-              // onRefresh={() => getPosts()}
+              onRefresh={() => null}
             ></ListVertical>
           </View>
         </ScrollView>

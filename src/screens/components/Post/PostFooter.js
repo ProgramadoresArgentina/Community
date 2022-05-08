@@ -20,6 +20,7 @@ PostFooter = ({ data, state, setHomePosts, setPinnedPosts }) => {
   const post = state.homePosts && state.homePosts.find(p => p._id === data._id);
   const postIndex = state.homePosts && state.homePosts.findIndex(p => p._id === data._id);
   const comments = post ? post.comments : [];
+  const likes = post ? post.reactions.length : 0;
 
   const userReaction = () => {
     const response = post ? post.reactions.find(reaction => reaction.user === state.user._id) ? true : false : false;
@@ -56,7 +57,7 @@ PostFooter = ({ data, state, setHomePosts, setPinnedPosts }) => {
     const body = {
       pin: postPinIndex !== -1 ? false : true
     }
-    AxiosService().post(`/post/pinned/${data._id}`, body).then(({data}) => {
+    AxiosService().post(`/pin/${data._id}`, body).then(({data}) => {
       Toast.show({
         type: 'success',
         text1: 'Pin',
@@ -96,15 +97,20 @@ PostFooter = ({ data, state, setHomePosts, setPinnedPosts }) => {
   return (
     <View style={{ width: '100%', justifyContent: 'space-between', flexDirection: 'row' }}>
       <View style={{ flexDirection: 'row', alignItems: 'center'}}>
+
+        {/* Likes */}
         <TouchableOpacity
           onPress={() => addReaction()}
-          style={{ alignItems: 'center', marginRight: 20 }}>
+          style={{ alignItems: 'center'}}>
           <Ionicons
             name={userReaction() ? "ios-heart" : "ios-heart-outline" }
             size={25}
             color={userReaction() ? themeColor.danger : '#000000' }
           />
         </TouchableOpacity>
+        <Text size="sm" color="#000" style={{marginLeft: 5, marginRight: 20}}>{likes}</Text>
+
+        {/* Comments */}
         <TouchableOpacity style={{ alignItems: 'center' }}>
           <Ionicons
             name="ios-share-social-sharp"

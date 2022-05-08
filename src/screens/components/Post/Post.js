@@ -54,12 +54,12 @@ postComponent = ({ data, state }) => {
       <View style={{ width: '100%', borderRadius: 10 }}>
         {
           !data.photo || data.photo !== '' &&
-          <TouchableOpacity style={{ width: '100%', position: 'relative', maxHeight: 200, zIndex: 20, borderRadius: 10 }}
+          <TouchableOpacity style={{ width: '100%', position: 'relative', maxHeight: 300, zIndex: 20, borderRadius: 10 }}
             onLayout={event => setWrapperWidth(event.nativeEvent.layout.width)}
             onPress={() => setFullScreen(true)}>
             <AutoHeightImage
               width={wrapperWidth}
-              maxHeight={200}
+              maxHeight={300}
               source={{ uri: data.photo.replace(/&#x2F;/g, '/') }}
               style={{ borderRadius: 10 }}
             />

@@ -25,6 +25,8 @@ import AddComment from '../screens/components/Post/Comments/AddComment';
 import PostDetail from '../screens/components/Post/PostDetail';
 import Comments from '../screens/components/Post/Comments/Comments';
 import UsersProfile from '../screens/UsersProfile';
+import Events from '../screens/Events';
+import createEvent from '../screens/Events/createEvent';
 
 const MainStack = createStackNavigator();
 
@@ -40,6 +42,7 @@ const Main = () => {
 			<MainStack.Screen name="Register" component={RegisterComponent} />
 			<MainStack.Screen name="ValidateOtp" component={ValidateOtpComponent} />
 			<MainStack.Screen name="Home" component={Home} />
+			<MainStack.Screen name="Events" component={Events} />
 			<MainStack.Screen name="SecondScreen" component={SecondScreen} />
 			<MainStack.Screen name="User" component={User} />
 			<MainStack.Screen name="NewEditPost" component={NewEditPost} />
@@ -47,6 +50,7 @@ const Main = () => {
 			<MainStack.Screen name="Comments" component={Comments} />
 			<MainStack.Screen name="AddComment" component={AddComment} />
 			<MainStack.Screen name="UsersProfile" component={UsersProfile} />
+			<MainStack.Screen name="CreateEvent" component={createEvent} />
 		</MainStack.Navigator>
 	);
 };
